@@ -1,1 +1,49 @@
 # Assignment-MasterO-Backend
+
+
+# Project Setup Steps
+
+Step 1. npm install
+
+Step 2. run dbInit.js to initialise the mysql database.
+
+Step 3. run the app using npm start.
+
+Note: Define PORT and Secret Key in environment file.
+
+# Api Usage
+
+AUTH : 
+
+Register : METHOD - POST
+           Endpoint - http://localhost:5000/auth/register
+
+Login :    METHOD - POST
+           Endpoint - http://localhost:5000/auth/login
+           A token will be generated after the successfull login. Set the token in Authorization Type Bearer Token. ( POSTMAN )
+
+Tasks : 
+           METHOD :   POST
+           Endpoint - http://localhost:5000/tasks
+           Usage - Creates a task which can be assigned to a user.
+           Body - { title, description, assigned_to, due_date }
+
+           METHOD: GET
+           Endpoint - http://localhost:5000/tasks 
+           Usage - Fetches all the tasks
+           Note - Only Authorized to Admin Users
+
+           METHOD: GET
+           Endpoint - http://localhost:5000/tasks/:id
+           Usage - Get Task by TaskID
+
+           METHOD: PUT
+           Endpoint - http://localhost:5000/tasks/:id
+           Usage - Update { title, description, status} of any task
+           Note  - Only Authorized to Admin Users. But Employee can update their task status.
+
+
+USERS :   METHOD: GET
+          Endpoint - http://localhost:5000/users
+          Usage - Fetches all the users of the application.
+          Note - Only Authorized to Admin Users.

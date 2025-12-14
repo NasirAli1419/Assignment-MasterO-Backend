@@ -16,6 +16,10 @@ const getTasksByUserId = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const result = await userService.getTasksByUserId(userId);
+
+    if (!result.length) {
+      return res.status(404).json({ message: "No tasks found for this user" });
+    }
     res.status(201).json({
       message: "Tasks Fetched successfully",
       tasks: result,

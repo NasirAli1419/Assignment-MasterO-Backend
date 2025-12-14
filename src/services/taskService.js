@@ -39,6 +39,14 @@ const updateTask = async (req) => {
   }
 
   if (status !== undefined) {
+    const allowedStatuses = ["pending", "in_progress", "completed"];
+    if (!allowedStatuses.includes(status)) {
+      const error = new Error(
+        "Invalid status value. Allowed: pending, in_progress, completed"
+      );
+      error.statusCode = 400;
+      throw error;
+    }
     fields.push("status = ?");
     values.push(status);
   }

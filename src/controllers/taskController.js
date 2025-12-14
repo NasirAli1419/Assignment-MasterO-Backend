@@ -28,6 +28,9 @@ const getTasks = async (req, res, next) => {
 const getTaskDetails = async (req, res, next) => {
   try {
     const result = await taskService.getTaskDetails(req.params.id);
+    if (!result.length) {
+      return res.status(404).json({ message: "Task not found" });
+    }
     res.status(201).json({
       message: "Task fetched successfully",
       task: result[0],

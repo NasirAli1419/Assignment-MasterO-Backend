@@ -2,50 +2,58 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const pool = require("../db/dbconnection");
 
-const register = async (req, res) => {
+const register = async (req, res, next) => {
   try {
     const { name, email, password, role = "employee" } = req.body;
 
     if (!name || !email || !password) {
-      return res.status(400).json({
-        message: "Name, email and password are required",
-      });
+      const err = new Error("Name, email and password are required");
+      err.statusCode = 400;
+      return next(err);
     }
 
     const [existing] = await pool.query("SELECT id from users WHERE email=?", [
       email,
     ]);
-    if (existing.length)
-      return res.status(400).json({ message: "User already exists" });
+    if (existing.length) {
+      const err = new Error("User already exists");
+      err.statusCode = 400;
+      return next(err);
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const result = await pool.query(
       "INSERT into users (name,email,password,role) VALUES (?,?,?,?)",
       [name, email, hashedPassword, role]
     );
-    console.log(result);
     res
       .status(201)
       .json({ result, role, message: "user registered successfully" });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-const login = async (req, res) => {
+const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const [rows] = await pool.query("SELECT * FROM users WHERE email = ?", [
       email,
     ]);
-    if (!rows.length)
-      return res.status(401).json({ message: "Invalid credentials" });
+    if (!rows.length) {
+      const err = new Error("Invalid credentials");
+      err.statusCode = 401;
+      return next(err);
+    }
 
     const user = rows[0];
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-      return res.status(401).json({ message: "Invalid credentials" });
+    if (!isMatch) {
+      const err = new Error("Invalid credentials");
+      err.statusCode = 401;
+      return next(err);
+    }
 
     const token = jwt.sign(
       { id: user.id, role: user.role },
@@ -53,9 +61,9 @@ const login = async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    res.json({ role, user, token });
+    res.json({ role: user.role, user, token });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 

@@ -6,6 +6,8 @@ const authRoutes = require("./routes/authRoutes");
 const taskRoutes = require("./routes/taskRoutes");
 const userRoutes = require("./routes/userRoutes");
 const pool = require("./db/dbconnection");
+const authMiddleware = require("./middlewares/authMiddleware");
+const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
 app.use(
@@ -23,8 +25,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // optional but recommended
 
 app.use("/auth", authRoutes);
-app.use("/tasks", taskRoutes);
+app.use("/tasks", authMiddleware, taskRoutes);
 app.use("/users", userRoutes);
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`listening at port ${PORT}`);

@@ -22,10 +22,9 @@ async function initDB() {
     // Execute schema
     await connection.query(schema);
 
-    console.log("✅ Database and tables initialized successfully!");
     await connection.end();
   } catch (err) {
-    console.error("❌ Error initializing DB:", err);
+    throw err;
   }
 }
 

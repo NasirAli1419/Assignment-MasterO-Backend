@@ -12,8 +12,9 @@ const errorHandler = require("./middlewares/errorHandler");
 const app = express();
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL, // frontend URL
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: process.env.FRONTEND_URL || "http://localhost:3000", // fallback
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true, // needed for cookies / auth
   })
 );

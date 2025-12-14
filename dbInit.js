@@ -4,7 +4,7 @@ const mysql = require("mysql2/promise");
 async function initDB() {
   try {
     // Read SQL file
-    const schema = fs.readFileSync(".src/db/schema.sql", "utf8");
+    const schema = fs.readFileSync("./src/db/schema.sql", "utf8");
 
     // Connect without selecting DB (because DB may not exist yet)
     const connection = await mysql.createConnection({

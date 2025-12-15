@@ -10,6 +10,8 @@ const authMiddleware = require("./middlewares/authMiddleware");
 const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
+
 app.use(
   cors({
     origin: process.env.FRONTEND_URL || "http://localhost:3000", // fallback
@@ -18,7 +20,6 @@ app.use(
     credentials: true, // needed for cookies / auth
   })
 );
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 const PORT = process.env.PORT;
 
